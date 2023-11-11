@@ -89,13 +89,15 @@ google.charts.load('current', {'packages':['bar']});
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
+let chartWidth = 900;
+
 function drawChart() {
     let data = google.visualization.arrayToDataTable(formatDataForColumnChart(jsonData));
 
     let options = {
         title: "Studijne vysledky",
-        width: 1500,
-        height: 600,
+        width: chartWidth,
+        height: 400,
         colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000']
     };
 
@@ -107,7 +109,7 @@ function drawChart() {
         let data = google.visualization.arrayToDataTable(element.pieChartData);
         let options = {
             title: element.year,
-            width: 500,
+            width: chartWidth/3,
             height: 300,
             colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000']
         }
