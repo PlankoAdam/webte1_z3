@@ -1,0 +1,4 @@
+#pie-charts-div{
+    display: flex;
+    flex-wrap: wrap;
+}
