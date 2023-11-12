@@ -1,4 +1,11 @@
+#charts{
+    width: fit-content;
+    max-width: min-content;
+    margin: auto;
+}
+
 #pie-charts-div{
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 }

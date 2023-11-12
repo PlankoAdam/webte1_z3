@@ -45,7 +45,7 @@ function xml2json(xml) {
     }
 }
 
-function formatDataForColumnChart(dataObj) {
+function formatDataForBarChart(dataObj) {
     const chartData = [];
     chartData.push(["Rok","A","B","C","D","E","FN","FX"]);
     dataObj.webte1.zaznam.slice().reverse().forEach(element => {
@@ -83,40 +83,79 @@ function formatDataForPieChart(dataObj) {
     return chartData;
 }
 
-const jsonData = xml2json(loadXml('z03.xml'));
-
 google.charts.load('current', {'packages':['bar']});
 google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+google.charts.setOnLoadCallback(drawBarChart);
+google.charts.setOnLoadCallback(drawPieCharts);
 
-let chartWidth = 900;
+const jsonData = xml2json(loadXml('z03.xml'));
 
-function drawChart() {
-    let data = google.visualization.arrayToDataTable(formatDataForColumnChart(jsonData));
+const barChartData = formatDataForBarChart(jsonData);
+let barChart;
+let barChartOptions;
 
-    let options = {
+const pieChartsData = formatDataForPieChart(jsonData);
+let pieCharts = [];
+let pieChartOptions = [];
+
+function drawBarChart() {
+    let data = google.visualization.arrayToDataTable(barChartData);
+
+    barChartOptions = {
         title: "Studijne vysledky",
-        width: chartWidth,
-        height: 400,
-        colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000']
+        width: 900,
+        height: 300,
+        colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000'],
     };
 
-    let chart = new google.charts.Bar(document.getElementById('col-chart-div'));
+    barChart = new google.charts.Bar(document.getElementById('col-chart-div'));
 
-    chart.draw(data, google.charts.Bar.convertOptions(options));
+    barChart.draw(data, google.charts.Bar.convertOptions(barChartOptions));
+}
 
-    formatDataForPieChart(jsonData).forEach(element => {
+function drawPieCharts() {
+    pieChartsData.forEach(element => {
         let data = google.visualization.arrayToDataTable(element.pieChartData);
+
         let options = {
             title: element.year,
-            width: chartWidth/3,
-            height: 300,
-            colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000']
+            width: barChartOptions.width/3,
+            height: 200,
+            colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000'],
+            legend: {alignment: 'center'}
         }
-        let newDiv = document.createElement('div', {id: 'pie-chart-div-'+element.year});
-        let chart = new google.visualization.PieChart(newDiv);
+        pieChartOptions.push(options);
+
+        let newDiv = document.createElement('div');
         document.getElementById('pie-charts-div').append(newDiv);
+
+        let chart = new google.visualization.PieChart(newDiv);
+        pieCharts.push(chart);
 
         chart.draw(data, options);
     });
 }
+
+const mainConatiner = document.getElementById('main-container');
+
+function onResize() {
+    if (bootstrapDetectBreakpoint().name === 'sm') {
+        barChartOptions.bars = 'horizontal';
+        barChartOptions.height = 500;
+    }
+    else if (bootstrapDetectBreakpoint().name === 'md') {
+        barChartOptions.bars = 'vertical';
+        barChartOptions.height = 300;
+    }
+    barChartOptions.width = mainConatiner.offsetWidth - 50;
+
+    barChart.draw(google.visualization.arrayToDataTable(barChartData), google.charts.Bar.convertOptions(barChartOptions));
+};
+
+var resizeTimer;
+$(window).resize(function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(onResize, 5);
+});
+
+// onResize();
