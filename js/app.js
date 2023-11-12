@@ -85,77 +85,88 @@ function formatDataForPieChart(dataObj) {
 
 google.charts.load('current', {'packages':['bar']});
 google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawBarChart);
-google.charts.setOnLoadCallback(drawPieCharts);
+google.charts.setOnLoadCallback(barChartInit);
+google.charts.setOnLoadCallback(pieChartInit);
 
 const jsonData = xml2json(loadXml('z03.xml'));
 
-const barChartData = formatDataForBarChart(jsonData);
-let barChart;
-let barChartOptions;
+let barChart = {};
 
-const pieChartsData = formatDataForPieChart(jsonData);
 let pieCharts = [];
-let pieChartOptions = [];
 
-function drawBarChart() {
-    let data = google.visualization.arrayToDataTable(barChartData);
-
-    barChartOptions = {
+function barChartInit() {
+    barChart.data = google.visualization.arrayToDataTable(formatDataForBarChart(jsonData));
+    barChart.options = {
         title: "Studijne vysledky",
-        width: 900,
-        height: 300,
         colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000'],
     };
 
-    barChart = new google.charts.Bar(document.getElementById('col-chart-div'));
-
-    barChart.draw(data, google.charts.Bar.convertOptions(barChartOptions));
+    barChart.chart = new google.charts.Bar(document.getElementById('bar-chart-div'));
+    onResize();
 }
 
-function drawPieCharts() {
-    pieChartsData.forEach(element => {
+function pieChartInit() {
+    formatDataForPieChart(jsonData).forEach(element => {
         let data = google.visualization.arrayToDataTable(element.pieChartData);
 
         let options = {
             title: element.year,
-            width: barChartOptions.width/3,
-            height: 200,
             colors: ['#12E351', '#0FBD44', '#0C9736', '#097229', '#064C1B', '#03260E', '#000000'],
             legend: {alignment: 'center'}
         }
-        pieChartOptions.push(options);
 
         let newDiv = document.createElement('div');
         document.getElementById('pie-charts-div').append(newDiv);
 
         let chart = new google.visualization.PieChart(newDiv);
-        pieCharts.push(chart);
-
-        chart.draw(data, options);
+        pieCharts.push({
+            data: data,
+            options: options,
+            chart: chart
+        });
     });
+    onResize();
 }
 
 const mainConatiner = document.getElementById('main-container');
 
 function onResize() {
-    if (bootstrapDetectBreakpoint().name === 'sm') {
-        barChartOptions.bars = 'horizontal';
-        barChartOptions.height = 500;
+    
+    barChart.options.width = Math.min(mainConatiner.offsetWidth - 50, 1000);
+
+    if (bootstrapDetectBreakpoint().name === 'sm' || bootstrapDetectBreakpoint().name === 'xs') {
+        barChart.options.bars = 'horizontal';
+        barChart.options.height = 500;
+        pieCharts.forEach(element => {
+            element.options.width = barChart.options.width;
+            element.options.height = 300;
+        });
     }
     else if (bootstrapDetectBreakpoint().name === 'md') {
-        barChartOptions.bars = 'vertical';
-        barChartOptions.height = 300;
+        barChart.options.bars = 'vertical';
+        barChart.options.height = 400;
+        pieCharts.forEach(element => {
+            element.options.width = barChart.options.width/2;
+            element.options.height = 200;
+        });
     }
-    barChartOptions.width = mainConatiner.offsetWidth - 50;
+    else {
+        barChart.options.bars = 'vertical';
+        barChart.options.height = 400;
+        pieCharts.forEach(element => {
+            element.options.width = barChart.options.width/3;
+            element.options.height = 200;
+        });
+    }
 
-    barChart.draw(google.visualization.arrayToDataTable(barChartData), google.charts.Bar.convertOptions(barChartOptions));
+    barChart.chart.draw(barChart.data, google.charts.Bar.convertOptions(barChart.options));
+    pieCharts.forEach(element => {
+        element.chart.draw(element.data, element.options);
+    });
 };
 
-var resizeTimer;
+let resizeTimer;
 $(window).resize(function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(onResize, 5);
 });
-
-// onResize();
