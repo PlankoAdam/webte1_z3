@@ -83,16 +83,41 @@ function formatDataForPieChart(dataObj) {
     return chartData;
 }
 
+function formatDataForSteppedChart(dataObj) {
+    const chartData = [];
+    chartData.push(['Rok','Absolventi','Prepadnutí']);
+    dataObj.webte1.zaznam.slice().reverse().forEach(element => {
+        const successCount =
+            Number(element.hodnotenie.A) +
+            Number(element.hodnotenie.B) +
+            Number(element.hodnotenie.C) +
+            Number(element.hodnotenie.D) +
+            Number(element.hodnotenie.E);
+        const failCount =
+            Number(element.hodnotenie.FN) +
+            Number(element.hodnotenie.FX);
+        chartData.push([
+            element.rok,
+            successCount,
+            failCount,
+        ]);
+    });
+    return chartData;
+}
+
 google.charts.load('current', {'packages':['bar']});
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(barChartInit);
 google.charts.setOnLoadCallback(pieChartInit);
+google.charts.setOnLoadCallback(steppedChartInit);
 
 const jsonData = xml2json(loadXml('z03.xml'));
 
 let barChart = {};
 
 let pieCharts = [];
+
+let steppedChart = {};
 
 function barChartInit() {
     barChart.data = google.visualization.arrayToDataTable(formatDataForBarChart(jsonData));
@@ -128,11 +153,25 @@ function pieChartInit() {
     onResize();
 }
 
+function steppedChartInit() {
+    steppedChart.data = google.visualization.arrayToDataTable(formatDataForSteppedChart(jsonData));
+    steppedChart.options = {
+        title: "Studijne vysledky",
+        colors: ['#12E351', '#F02000'],
+        isStacked: true,
+        height: 700
+    };
+
+    steppedChart.chart = new google.visualization.SteppedAreaChart(document.getElementById('stepped-chart-div'));
+    onResize();
+}
+
 const mainConatiner = document.getElementById('main-container');
 
 function onResize() {
     
     barChart.options.width = Math.min(mainConatiner.offsetWidth - 50, 1000);
+    steppedChart.options.width = barChart.options.width;
 
     if (bootstrapDetectBreakpoint().name === 'sm' || bootstrapDetectBreakpoint().name === 'xs') {
         barChart.options.bars = 'horizontal';
@@ -163,6 +202,7 @@ function onResize() {
     pieCharts.forEach(element => {
         element.chart.draw(element.data, element.options);
     });
+    steppedChart.chart.draw(steppedChart.data, steppedChart.options);
 };
 
 let resizeTimer;
