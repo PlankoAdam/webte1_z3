@@ -1,16 +1,16 @@
-.charts{
-    max-width: min-content;
-    margin: auto;
-    box-sizing: border-box;
+.charts {
+  max-width: min-content;
+  margin: auto;
+  box-sizing: border-box;
 }
 
-#pie-charts-div{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
+#pie-charts-div {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.navbar-brand{
-    font-family: Comfortaa, sans-serif;
-    font-weight: 700;
+.navbar-brand {
+  font-family: Comfortaa, sans-serif;
+  font-weight: 700;
 }
