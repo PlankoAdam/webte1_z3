@@ -1,49 +1,16 @@
-function loadXml(url) {
-    let xmlhttp;
-    if (window.XMLHttpRequest) {
-        xmlhttp = new XMLHttpRequest();
-    }
-    else {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.open("GET", url, false);
-    xmlhttp.send();
-    if (xmlhttp.status == 200) {
-        return xmlhttp.responseXML;
-    }
-    else {
-        console.log('Error loading XML');
-    }
-}
+import * as utils from './utils.js';
 
-function xml2json(xml) {
-    try {
-      var obj = {};
-      if (xml.children.length > 0) {
-        for (var i = 0; i < xml.children.length; i++) {
-          var item = xml.children.item(i);
-          var nodeName = item.nodeName;
-  
-          if (typeof (obj[nodeName]) == "undefined") {
-            obj[nodeName] = xml2json(item);
-          } else {
-            if (typeof (obj[nodeName].push) == "undefined") {
-              var old = obj[nodeName];
-  
-              obj[nodeName] = [];
-              obj[nodeName].push(old);
-            }
-            obj[nodeName].push(xml2json(item));
-          }
-        }
-      } else {
-        obj = xml.textContent;
-      }
-      return obj;
-    } catch (e) {
-        console.log(e.message);
-    }
-}
+google.charts.load('current', {'packages':['bar']});
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(chartsInit);
+
+const jsonData = utils.xml2json(utils.loadXml('z03.xml'));
+
+let barChart = {};
+
+let pieCharts = [];
+
+let steppedChart = {};
 
 function formatDataForBarChart(dataObj) {
     const chartData = [];
@@ -105,19 +72,12 @@ function formatDataForSteppedChart(dataObj) {
     return chartData;
 }
 
-google.charts.load('current', {'packages':['bar']});
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(barChartInit);
-google.charts.setOnLoadCallback(pieChartInit);
-google.charts.setOnLoadCallback(steppedChartInit);
-
-const jsonData = xml2json(loadXml('z03.xml'));
-
-let barChart = {};
-
-let pieCharts = [];
-
-let steppedChart = {};
+function chartsInit() {
+    barChartInit();
+    pieChartInit();
+    steppedChartInit();
+    onResize();
+}
 
 function barChartInit() {
     barChart.data = google.visualization.arrayToDataTable(formatDataForBarChart(jsonData));
@@ -127,7 +87,6 @@ function barChartInit() {
     };
 
     barChart.chart = new google.charts.Bar(document.getElementById('bar-chart-div'));
-    onResize();
 }
 
 function pieChartInit() {
@@ -150,7 +109,6 @@ function pieChartInit() {
             chart: chart
         });
     });
-    onResize();
 }
 
 function steppedChartInit() {
@@ -163,7 +121,6 @@ function steppedChartInit() {
     };
 
     steppedChart.chart = new google.visualization.SteppedAreaChart(document.getElementById('stepped-chart-div'));
-    onResize();
 }
 
 const mainConatiner = document.getElementById('main-container');
@@ -180,6 +137,7 @@ function onResize() {
             element.options.width = barChart.options.width;
             element.options.height = 300;
         });
+        steppedChart.options.height = 300;
     }
     else if (bootstrapDetectBreakpoint().name === 'md') {
         barChart.options.bars = 'vertical';
@@ -188,6 +146,7 @@ function onResize() {
             element.options.width = barChart.options.width/2;
             element.options.height = 200;
         });
+        steppedChart.options.height = 500;
     }
     else {
         barChart.options.bars = 'vertical';
@@ -196,6 +155,7 @@ function onResize() {
             element.options.width = barChart.options.width/3;
             element.options.height = 200;
         });
+        steppedChart.options.height = 700;
     }
 
     barChart.chart.draw(barChart.data, google.charts.Bar.convertOptions(barChart.options));
