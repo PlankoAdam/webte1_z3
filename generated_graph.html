@@ -36,7 +36,9 @@
     <script type="text/javascript" src="js/bpDetector.js" defer></script>
   </head>
   <body>
-    <nav class="navbar navbar-dark navbar-expand-md bg-dark mb-5 p-0">
+    <nav
+      class="navbar navbar-dark navbar-expand-md bg-dark mb-5 p-0 sticky-top"
+    >
       <div class="container-fluid p-1 px-4">
         <a class="navbar-brand m-0 pe-3 fs-3" href="./index.html">Planko</a>
         <button
@@ -71,7 +73,36 @@
     <div id="main-container" class="container">
       <div class="charts">
         <div id="graph-chart"></div>
-        <button id="stop-btn" class="btn btn-danger ms-auto">Stop</button>
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-auto me-auto ms-auto ms-sm-0">
+              <div>
+                <input
+                  type="checkbox"
+                  id="sin-checkbox"
+                  class="form-check-input"
+                  checked
+                />
+                <label for="sin-checkbox">Sin</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="cosin-checkbox"
+                  class="form-check-input"
+                  checked
+                />
+                <label for="cosin-checkbox">Cosin</label>
+              </div>
+            </div>
+            <div class="col-auto ms-auto me-auto ms-sm-0 me-sm-0 py-1">
+              <input type="range" />
+            </div>
+            <div class="col-auto ms-auto me-auto me-sm-0">
+              <button id="stop-btn" class="btn btn-danger ms-auto">Stop</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
