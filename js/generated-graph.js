@@ -8,9 +8,12 @@ function graphInit() {
         width: 1000,
         height: 500,
         curveType: 'function',
+        colors: ['#12E351', '#097229']
     };
 
+    graph.data.push([0,0,0]);
     onResize();
+    graph.data.pop();
 
     evtSource.addEventListener('message', evtSource.fn = function(e) {
         let data = JSON.parse(e.data);
@@ -38,6 +41,8 @@ const evtSource = new EventSource("https://old.iolab.sk/evaluation/sse/sse.php")
 const stopBtn = document.getElementById('stop-btn');
 stopBtn.addEventListener('click', e => {
     evtSource.removeEventListener('message', evtSource.fn);
+    stopBtn.innerHTML = 'Stopped';
+    stopBtn.classList.add('disabled');
 });
 
 const mainConatiner = document.getElementById('main-container');

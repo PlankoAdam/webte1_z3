@@ -9,3 +9,8 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.navbar-brand{
+    font-family: Comfortaa, sans-serif;
+    font-weight: 700;
+}

@@ -5,12 +5,19 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(chartsInit);
 
 const jsonData = utils.xml2json(utils.loadXml('z03.xml'));
+const mainConatiner = document.getElementById('main-container');
 
 let barChart = {};
 
 let pieCharts = [];
 
 let steppedChart = {};
+
+let resizeTimer;
+$(window).resize(function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(onResize, 5);
+});
 
 function formatDataForBarChart(dataObj) {
     const chartData = [];
@@ -123,7 +130,6 @@ function steppedChartInit() {
     steppedChart.chart = new google.visualization.SteppedAreaChart(document.getElementById('stepped-chart-div'));
 }
 
-const mainConatiner = document.getElementById('main-container');
 
 function onResize() {
     
@@ -164,9 +170,3 @@ function onResize() {
     });
     steppedChart.chart.draw(steppedChart.data, steppedChart.options);
 };
-
-let resizeTimer;
-$(window).resize(function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(onResize, 5);
-});
