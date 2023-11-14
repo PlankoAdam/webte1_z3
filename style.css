@@ -20,3 +20,12 @@ input[type="checkbox"],
   cursor: pointer;
   user-select: none;
 }
+
+#stop-btn {
+  width: 100%;
+  min-width: fit-content;
+}
+
+#graph-controls-tool-tip {
+  opacity: 0;
+}

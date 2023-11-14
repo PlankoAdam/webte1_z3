@@ -16,6 +16,7 @@ stopBtn.addEventListener("click", () => {
   stopBtn.classList.add("disabled");
   graph.options.explorer = {};
   drawGraph();
+  $("#graph-controls-tool-tip").css("opacity", 1);
 });
 
 const amplitudeSlider = document.getElementById("amplitude-slider");
