@@ -25,6 +25,8 @@ class RangeSlider extends HTMLElement {
     this.thumbContainer.appendChild(this.thumb);
     this.container.appendChild(this.inputTypeNumber);
 
+    this.thumbHeight = 18;
+
     const style = document.createElement("style");
     style.innerHTML = `
                 #container {
@@ -34,7 +36,6 @@ class RangeSlider extends HTMLElement {
                 }
 
                 .custom-range {
-                  -webkit-appearance: none;
                   margin: 0;
                 }
 
@@ -50,27 +51,39 @@ class RangeSlider extends HTMLElement {
 
                 .custom-range::-webkit-slider-thumb, .custom-range::-moz-range-thumb {
                   width: 35px;
-                  height: 15px;
+                  height: ${this.thumbHeight}px;
+                  background: #000000;
+                  opacity: 0;
+                  cursor: pointer;
+                }
+
+                .custom-range:focus {
+                  outline: none;
+                }
+
+                .custom-number {
+                  margin-top: 0.3rem;
+                }
+                
+                #thumb-container {
+                  width: 35px;
+                  height: ${this.thumbHeight}px;
                   border: 2px #aaaaaa solid;
                   border-radius: 3px;
                   background: #ffffff;
                   box-sizing: border-box;
-                }
-
-                #thumb-container {
-                  width: 35px;
-                  height: 15px;
-                  top: -15px;
                   position: relative;
                   pointer-events: none;
                   text-align: center;
+                  margin-top: ${-this.thumbHeight}px;
+                  cursor: pointer;
                 }
 
                 #thumb {
                   position: absolute;
                   top: 50%;
                   left: 50%;
-                  transform: translate(-50%, -60%);
+                  transform: translate(-50%, -55%);
                   pointer-events: none;
                   font-size: 10pt;
                 }
@@ -125,7 +138,6 @@ class RangeSlider extends HTMLElement {
     );
     this.thumbContainer.style.left = ratio + "%";
     this.thumbContainer.style.transform = `translate(${-ratio}%, 0%)`;
-    console.log(Math.round(ratio * 100));
   }
 }
 
