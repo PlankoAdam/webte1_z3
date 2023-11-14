@@ -18,7 +18,6 @@
     />
 
     <script
-      defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
@@ -33,47 +32,18 @@
   </head>
 
   <body>
-    <nav
-      class="navbar navbar-dark navbar-expand-md bg-dark mb-5 p-0 sticky-top"
-    >
-      <div class="container-fluid p-1 px-4">
-        <a class="navbar-brand m-0 pe-3 fs-3" href="./index.html">Planko</a>
-        <button
-          class="navbar-toggler border-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav-tgglr"
-          aria-controls="nav-tgglr"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav-tgglr">
-          <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./index.html"
-                >Charts</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./generated_graph.html"
-                >Real Time Graph</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
+    <!-- ----------MAIN CONTENT---------- -->
     <div id="main-container" class="container">
       <div class="charts">
-        <div id="bar-chart-div"></div>
+        <div id="bar-chart-div" class="mb-4"></div>
         <div id="pie-charts-div"></div>
         <div id="stepped-chart-div"></div>
       </div>
     </div>
 
+    <!-- ----------FOOTER---------- -->
     <div class="container">
       <footer
         class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"
@@ -98,5 +68,15 @@
         </ul>
       </footer>
     </div>
+
+    <script defer>
+      $(function () {
+        $("#navbar-placeholder").load("./navbar.html", () => {
+          $("#page-navbar").unwrap();
+          $("#index-page").addClass("active");
+          $("#index-page").attr("aria-current", "true");
+        });
+      });
+    </script>
   </body>
 </html>

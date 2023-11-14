@@ -14,3 +14,9 @@
   font-family: Comfortaa, sans-serif;
   font-weight: 700;
 }
+
+input[type="checkbox"],
+.checkbox-label {
+  cursor: pointer;
+  user-select: none;
+}

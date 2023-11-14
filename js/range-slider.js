@@ -92,21 +92,31 @@ class RangeSlider extends HTMLElement {
     this.shadowRoot.appendChild(style);
     this.shadowRoot.appendChild(this.container);
 
-    const numInput = this.inputTypeNumber;
-    const rangeInput = this.inputTypeRange;
-
-    numInput.addEventListener("input", () => {
-      this.value = numInput.value;
-      rangeInput.value = this.value;
-      this.thumb.innerText = this.value;
-      this.updateThumbPosition();
+    this.inputTypeNumber.addEventListener("keypress", function (evt) {
+      if (
+        (evt.key.charCodeAt() < 48 || evt.key.charCodeAt() > 57) &&
+        evt.key !== "Enter"
+      ) {
+        evt.preventDefault();
+      }
     });
 
-    rangeInput.addEventListener("input", () => {
-      this.value = rangeInput.value;
-      numInput.value = this.value;
-      this.thumb.innerText = this.value;
-      this.updateThumbPosition();
+    this.inputTypeNumber.addEventListener("change", () => {
+      if (this.inputTypeNumber.value > this.max)
+        this.inputTypeNumber.value = this.max;
+      else if (this.inputTypeNumber.value < this.min)
+        this.inputTypeNumber.value = this.min;
+      this.value = this.inputTypeNumber.value;
+      this.inputTypeRange.value = this.value;
+      this.updateThumb();
+      this.dispatchEvent(new Event("change"));
+    });
+
+    this.inputTypeRange.addEventListener("input", () => {
+      this.value = this.inputTypeRange.value;
+      this.inputTypeNumber.value = this.value;
+      this.updateThumb();
+      this.dispatchEvent(new Event("change"));
     });
   }
 
@@ -124,20 +134,21 @@ class RangeSlider extends HTMLElement {
       this.inputTypeNumber.setAttribute("max", this.max);
       this.inputTypeRange.setAttribute("max", this.max);
     }
-    const middle = Number((this.max + this.min) / 2);
+    const middle = Math.round((this.max + this.min) / 2);
     this.inputTypeNumber.value = middle;
     this.inputTypeRange.value = middle;
     this.thumb.innerText = middle;
     this.value = this.inputTypeNumber.value;
-    this.updateThumbPosition();
+    this.updateThumb();
   }
 
-  updateThumbPosition() {
+  updateThumb() {
     const ratio = Math.round(
       ((this.value - this.min) / (this.max - this.min)) * 100
     );
     this.thumbContainer.style.left = ratio + "%";
     this.thumbContainer.style.transform = `translate(${-ratio}%, 0%)`;
+    this.thumb.innerText = this.value;
   }
 }
 

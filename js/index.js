@@ -1,17 +1,15 @@
 import * as utils from "./utils.js";
 
-google.charts.load("current", { packages: ["bar"] });
-google.charts.load("current", { packages: ["corechart"] });
-google.charts.setOnLoadCallback(chartsInit);
-
 const jsonData = utils.xml2json(utils.loadXml("z03.xml"));
 const mainConatiner = document.getElementById("main-container");
 
 let barChart = {};
-
 let pieCharts = [];
-
 let steppedChart = {};
+
+google.charts.load("current", { packages: ["bar"] });
+google.charts.load("current", { packages: ["corechart"] });
+google.charts.setOnLoadCallback(chartsInit);
 
 let resizeTimer;
 $(window).resize(function () {
@@ -21,7 +19,7 @@ $(window).resize(function () {
 
 function formatDataForBarChart(dataObj) {
   const chartData = [];
-  chartData.push(["Rok", "A", "B", "C", "D", "E", "FN", "FX"]);
+  chartData.push(["Year", "A", "B", "C", "D", "E", "FN", "FX"]);
   dataObj.webte1.zaznam
     .slice()
     .reverse()
@@ -65,7 +63,7 @@ function formatDataForPieChart(dataObj) {
 
 function formatDataForSteppedChart(dataObj) {
   const chartData = [];
-  chartData.push(["Rok", "Absolventi", "Prepadnutí"]);
+  chartData.push(["Year", "Absolvents", "Failed"]);
   dataObj.webte1.zaznam
     .slice()
     .reverse()
@@ -95,7 +93,6 @@ function barChartInit() {
     formatDataForBarChart(jsonData)
   );
   barChart.options = {
-    title: "Studijne vysledky",
     colors: [
       "#12E351",
       "#0FBD44",
@@ -147,10 +144,17 @@ function steppedChartInit() {
     formatDataForSteppedChart(jsonData)
   );
   steppedChart.options = {
-    title: "Studijne vysledky",
     colors: ["#12E351", "#F02000"],
     isStacked: true,
     height: 700,
+    chartArea: {
+      width: 0,
+      height: 0,
+    },
+    legend: {
+      position: "top",
+      alignment: "center",
+    },
   };
 
   steppedChart.chart = new google.visualization.SteppedAreaChart(
@@ -161,6 +165,7 @@ function steppedChartInit() {
 function onResize() {
   barChart.options.width = Math.min(mainConatiner.offsetWidth - 50, 1000);
   steppedChart.options.width = barChart.options.width;
+  steppedChart.options.chartArea.width = steppedChart.options.width * 0.8;
 
   if (
     bootstrapDetectBreakpoint().name === "sm" ||
@@ -190,6 +195,7 @@ function onResize() {
     });
     steppedChart.options.height = 700;
   }
+  steppedChart.options.chartArea.height = steppedChart.options.height * 0.7;
 
   barChart.chart.draw(
     barChart.data,

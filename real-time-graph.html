@@ -18,17 +18,12 @@
     />
 
     <script
-      defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script
-      defer
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    ></script>
-    <script
-      defer
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
@@ -37,40 +32,9 @@
     <script src="./js/range-slider.js"></script>
   </head>
   <body>
-    <nav
-      class="navbar navbar-dark navbar-expand-md bg-dark mb-5 p-0 sticky-top"
-    >
-      <div class="container-fluid p-1 px-4">
-        <a class="navbar-brand m-0 pe-3 fs-3" href="./index.html">Planko</a>
-        <button
-          class="navbar-toggler border-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav-tgglr"
-          aria-controls="nav-tgglr"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav-tgglr">
-          <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a class="nav-link" href="./index.html">Charts</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="./generated_graph.html"
-                >Real Time Graph</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
+    <!-- ----------MAIN CONTENT---------- -->
     <div id="main-container" class="container">
       <div class="charts">
         <div id="graph-chart"></div>
@@ -78,7 +42,7 @@
           <div class="row align-items-center">
             <div class="col-auto me-auto ms-auto ms-sm-0">
               <div>
-                <label for="sin-checkbox">
+                <label for="sin-checkbox" class="checkbox-label">
                   <input
                     type="checkbox"
                     id="sin-checkbox"
@@ -89,7 +53,7 @@
                 </label>
               </div>
               <div>
-                <label for="cosin-checkbox">
+                <label for="cosin-checkbox" class="checkbox-label">
                   <input
                     type="checkbox"
                     id="cosin-checkbox"
@@ -101,16 +65,23 @@
               </div>
             </div>
             <div class="col-auto ms-auto me-auto ms-sm-0 me-sm-0 py-1">
-              <range-slider minimum="10" maximum="30"></range-slider>
+              <range-slider
+                id="amplitude-slider"
+                minimum="1"
+                maximum="10"
+              ></range-slider>
             </div>
             <div class="col-auto ms-auto me-auto me-sm-0">
-              <button id="stop-btn" class="btn btn-danger ms-auto">Stop</button>
+              <button id="stop-btn" class="btn btn-danger ms-auto">
+                <div id="stop-btn-txt" style="min-width: 5rem">Stop</div>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ----------FOOTER---------- -->
     <div class="container">
       <footer
         class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"
@@ -135,5 +106,15 @@
         </ul>
       </footer>
     </div>
+
+    <script defer>
+      $(function () {
+        $("#navbar-placeholder").load("./navbar.html", () => {
+          $("#page-navbar").unwrap();
+          $("#real-time-graph-page").addClass("active");
+          $("#real-time-graph-page").attr("aria-current", "true");
+        });
+      });
+    </script>
   </body>
 </html>
