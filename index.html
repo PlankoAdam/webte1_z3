@@ -49,13 +49,13 @@
 
     <script defer>
       $(function () {
-        $("#navbar-placeholder").load("./navbar.html", () => {
+        $("#navbar-placeholder").load("./global_elements/navbar.html", () => {
           $("#page-navbar").unwrap();
           $("#index-page").addClass("active");
           $("#index-page").attr("aria-current", "true");
         });
 
-        $("#footer-placeholder").load("./footer.html", () => {
+        $("#footer-placeholder").load("./global_elements/footer.html", () => {
           $("#page-footer").unwrap();
         });
       });
