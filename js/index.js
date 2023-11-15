@@ -102,6 +102,9 @@ function barChartInit() {
       "#03260E",
       "#000000",
     ],
+    vAxis: {
+      title: "No. of Students",
+    },
   };
 
   barChart.chart = new google.charts.Bar(
@@ -154,6 +157,12 @@ function steppedChartInit() {
     legend: {
       position: "top",
       alignment: "center",
+    },
+    vAxis: {
+      title: "No. of Students",
+    },
+    hAxis: {
+      title: "Year",
     },
   };
 

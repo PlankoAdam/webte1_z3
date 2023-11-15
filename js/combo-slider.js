@@ -1,4 +1,4 @@
-class RangeSlider extends HTMLElement {
+class ComboSlider extends HTMLElement {
   constructor() {
     super();
 
@@ -152,4 +152,4 @@ class RangeSlider extends HTMLElement {
   }
 }
 
-customElements.define("range-slider", RangeSlider);
+customElements.define("combo-slider", ComboSlider);
